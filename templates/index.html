@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SolarCore | Energy Management</title>
+
+<link rel="stylesheet" href="/static/style.css">
+```
+
+</head>
+
+<body>
+
+```
+<div class="app">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ☀
+            </div>
+
+            <div>
+
+                <h1>
+                    SOLAR<span>CORE</span>
+                </h1>
+
+                <p>
+                    ENERGY MANAGEMENT SYSTEM
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="system-status">
+
+            <div class="status-item">
+
+                <span class="status-dot"></span>
+
+                SYSTEM ONLINE
+
+            </div>
+
+
+            <div class="status-item">
+
+                MQTT
+
+                <strong id="connectionStatus">
+                    CONNECTING
+                </strong>
+
+            </div>
+
+
+            <div
+                class="mode-badge"
+                id="systemMode"
+            >
+                AUTO
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main>
+
+
+        <!-- ===== PRIMARY METRICS ===== -->
+
+        <section class="metrics-grid">
+
+
+            <!-- SOLAR -->
+
+            <div class="metric-card solar-card">
+
+                <div class="metric-top">
+
+                    <span class="metric-label">
+                        SOLAR GENERATION
+                    </span>
+
+                    <span class="metric-icon">
+                        ☀
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="metric-value"
+                    id="solarPower"
+                >
+                    0.00
+                </div>
+
+
+                <div class="metric-unit">
+                    WATTS
+                </div>
+
+
+                <div class="metric-footer">
+                    LIVE GENERATION
+                </div>
+
+            </div>
+
+
+
+            <!-- BATTERY -->
+
+            <div class="metric-card">
+
+                <div class="metric-top">
+
+                    <span class="metric-label">
+                        BATTERY
+                    </span>
+
+                    <span class="metric-icon">
+                        ◉
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="metric-value"
+                    id="batterySOC"
+                >
+                    0.0
+                </div>
+
+
+                <div class="metric-unit">
+                    %
+                </div>
+
+
+                <div class="battery-bar">
+
+                    <div
+                        id="batteryFill"
+                        class="battery-fill"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    class="metric-footer"
+                    id="batteryVoltage"
+                >
+                    0.00 V
+                </div>
+
+            </div>
+
+
+
+            <!-- LOAD -->
+
+            <div class="metric-card">
+
+                <div class="metric-top">
+
+                    <span class="metric-label">
+                        LOAD CONSUMPTION
+                    </span>
+
+                    <span class="metric-icon">
+                        ⚡
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="metric-value"
+                    id="loadPower"
+                >
+                    0.00
+                </div>
+
+
+                <div class="metric-unit">
+                    WATTS
+                </div>
+
+
+                <div class="metric-footer">
+                    CURRENT DEMAND
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===== ENERGY ANALYTICS ===== -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        HISTORICAL ANALYSIS
+                    </p>
+
+                    <h2>
+                        ENERGY ANALYTICS
+                    </h2>
+
+                </div>
+
+                <span class="live-label">
+                    SQLITE + PANDAS
+                </span>
+
+            </div>
+
+
+            <div class="metrics-grid analytics-grid">
+
+
+                <!-- ENERGY GENERATED -->
+
+                <div class="metric-card">
+
+                    <div class="metric-top">
+
+                        <span class="metric-label">
+                            ENERGY GENERATED
+                        </span>
+
+                        <span class="metric-icon">
+                            ☀
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="metric-value"
+                        id="energyGenerated"
+                    >
+                        0.000
+                    </div>
+
+
+                    <div class="metric-unit">
+                        kWh
+                    </div>
+
+
+                    <div class="metric-footer">
+                        TOTAL SOLAR ENERGY
+                    </div>
+
+                </div>
+
+
+
+                <!-- ENERGY CONSUMED -->
+
+                <div class="metric-card">
+
+                    <div class="metric-top">
+
+                        <span class="metric-label">
+                            ENERGY CONSUMED
+                        </span>
+
+                        <span class="metric-icon">
+                            ⚡
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="metric-value"
+                        id="energyConsumed"
+                    >
+                        0.000
+                    </div>
+
+
+                    <div class="metric-unit">
+                        kWh
+                    </div>
+
+
+                    <div class="metric-footer">
+                        TOTAL LOAD ENERGY
+                    </div>
+
+                </div>
+
+
+
+                <!-- ENERGY SURPLUS -->
+
+                <div class="metric-card">
+
+                    <div class="metric-top">
+
+                        <span class="metric-label">
+                            ENERGY SURPLUS
+                        </span>
+
+                        <span class="metric-icon">
+                            +
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="metric-value"
+                        id="energySurplus"
+                    >
+                        0.000
+                    </div>
+
+
+                    <div class="metric-unit">
+                        kWh
+                    </div>
+
+
+                    <div class="metric-footer">
+                        GENERATION − CONSUMPTION
+                    </div>
+
+                </div>
+
+
+
+                <!-- PEAK SOLAR -->
+
+                <div class="metric-card">
+
+                    <div class="metric-top">
+
+                        <span class="metric-label">
+                            PEAK SOLAR
+                        </span>
+
+                        <span class="metric-icon">
+                            ↗
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="metric-value"
+                        id="peakSolar"
+                    >
+                        0
+                    </div>
+
+
+                    <div class="metric-unit">
+                        WATTS
+                    </div>
+
+
+                    <div class="metric-footer">
+                        MAXIMUM GENERATION
+                    </div>
+
+                </div>
+
+                <!-- AVERAGE SOLAR -->
+
+                <div class="metric-card">
+                    <div class="metric-top">
+                        <span class="metric-label">
+                            AVG SOLAR POWER
+                        </span>
+                        <span class="metric-icon">
+                            ≈
+                        </span>
+                    </div>
+
+                    <div
+                        class="metric-value"
+                        id="averageSolar"
+                    >
+                        0.0
+                    </div>
+
+                    <div class="metric-unit">
+                        WATTS
+                    </div>
+
+                    <div class="metric-footer">
+                        HISTORICAL AVERAGE
+                    </div>
+                </div>
+
+
+                <!-- AVERAGE LOAD -->
+
+                <div class="metric-card">
+                    <div class="metric-top">
+                        <span class="metric-label">
+                            AVG LOAD POWER
+                        </span>
+                        <span class="metric-icon">
+                            ≈
+                        </span>
+                    </div>
+
+                    <div
+                        class="metric-value"
+                        id="averageLoad"
+                    >
+                        0.0
+                    </div>
+
+                    <div class="metric-unit">
+                        WATTS
+                    </div>
+
+                    <div class="metric-footer">
+                        HISTORICAL AVERAGE
+                    </div>
+                </div>
+
+
+                <!-- SOLAR LOAD RATIO -->
+
+                <div class="metric-card">
+                    <div class="metric-top">
+                        <span class="metric-label">
+                            SOLAR / LOAD RATIO
+                        </span>
+                        <span class="metric-icon">
+                            ↗
+                        </span>
+                    </div>
+
+                    <div
+                        class="metric-value"
+                        id="solarLoadRatio"
+                    >
+                        0.00
+                    </div>
+
+                    <div class="metric-unit">
+                        RATIO
+                    </div>
+
+                    <div class="metric-footer">
+                        GENERATION / DEMAND
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===== POWER FLOW ===== -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        REAL-TIME SYSTEM
+                    </p>
+
+                    <h2>
+                        POWER FLOW
+                    </h2>
+
+                </div>
+
+                <span class="live-label">
+                    ● LIVE
+                </span>
+
+            </div>
+
+
+            <div class="power-flow">
+
+
+                <!-- SOLAR -->
+
+                <div class="flow-node">
+
+                    <div class="node-icon solar">
+                        ☀
+                    </div>
+
+                    <h3>
+                        SOLAR
+                    </h3>
+
+                    <strong id="flowSolar">
+                        0 W
+                    </strong>
+
+                </div>
+
+
+                <div class="flow-line">
+                    <span>→</span>
+                </div>
+
+
+                <!-- CONTROLLER -->
+
+                <div class="flow-node controller">
+
+                    <div class="node-icon">
+                        ESP32
+                    </div>
+
+                    <h3>
+                        CONTROLLER
+                    </h3>
+
+                    <strong>
+                        ACTIVE
+                    </strong>
+
+                </div>
+
+
+                <div class="flow-line">
+                    <span>→</span>
+                </div>
+
+
+                <!-- LOAD -->
+
+                <div class="flow-node">
+
+                    <div class="node-icon load">
+                        ⚡
+                    </div>
+
+                    <h3>
+                        LOAD
+                    </h3>
+
+                    <strong id="flowLoad">
+                        0 W
+                    </strong>
+
+                </div>
+
+
+                <div class="flow-line">
+                    <span>↕</span>
+                </div>
+
+
+                <!-- BATTERY -->
+
+                <div class="flow-node">
+
+                    <div class="node-icon battery">
+                        ◉
+                    </div>
+
+                    <h3>
+                        BATTERY
+                    </h3>
+
+                    <strong id="flowBattery">
+                        0%
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===== LOWER GRID ===== -->
+
+        <section class="lower-grid">
+
+
+            <!-- LOAD CONTROL -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            DISTRIBUTION
+                        </p>
+
+                        <h2>
+                            LOAD STATUS
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="load-row">
+
+                    <div class="load-info">
+
+                        <div class="load-indicator"></div>
+
+                        <div>
+
+                            <strong>
+                                Essential Load
+                            </strong>
+
+                            <span>
+                                Priority circuit
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="load-state"
+                        id="essentialLoad"
+                    >
+                        OFF
+                    </div>
+
+                </div>
+
+
+
+                <div class="load-row">
+
+                    <div class="load-info">
+
+                        <div class="load-indicator"></div>
+
+                        <div>
+
+                            <strong>
+                                Non-Essential Load
+                            </strong>
+
+                            <span>
+                                Secondary circuit
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="load-state"
+                        id="nonEssentialLoad"
+                    >
+                        OFF
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SYSTEM INFORMATION -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            CONTROLLER
+                        </p>
+
+                        <h2>
+                            SYSTEM INFO
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Controller
+                    </span>
+
+                    <strong>
+                        ESP32
+                    </strong>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Network
+                    </span>
+
+                    <strong>
+                        Wi-Fi
+                    </strong>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Protocol
+                    </span>
+
+                    <strong>
+                        MQTT
+                    </strong>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Backend
+                    </span>
+
+                    <strong>
+                        FastAPI
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===== POWER HISTORY ===== -->
+
+        <section class="panel history-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        TELEMETRY
+                    </p>
+
+                    <h2>
+                        POWER MONITOR
+                    </h2>
+
+                </div>
+
+                <span class="live-label">
+                    LIVE DATA
+                </span>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="powerChart"></canvas>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <span>
+            SOLARCORE
+        </span>
+
+        <span>
+            IoE ENERGY MANAGEMENT PLATFORM
+        </span>
+
+    </footer>
+
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="/static/script.js"></script>
+```
+
+</body>
+
+</html>
